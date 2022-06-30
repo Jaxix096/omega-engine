@@ -1,6 +1,6 @@
 var mod = {
-    primaryName: "ω",
-    secondaryName: "Engine",
+    primaryName: "L<sub>O</sub><sup>N<sub>G</sub>",
+    secondaryName: "Layers",
     version: "1.0.0",
     engineVer: "0.2.3 P1", //DO NOT MODIFY
     debugMode: true,
