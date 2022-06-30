@@ -89,9 +89,9 @@ var getPrimaryEquation = () => {
   
     result += "a_3";
     
-    result += "b_1 \times ";
+    result += "b_1 \\times ";
    
-    result += "\sqrt{q}";
+    result += "\\sqrt{q}";
 
     return result;
 }
