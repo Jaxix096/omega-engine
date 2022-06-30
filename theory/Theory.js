@@ -7,14 +7,17 @@ import { Utils } from "../api/Utils";
 var id = "glitch_theory";
 var name = "My Custom Theory";
 var description = "An implementation of... what? everything you buy will only works while offline";
-var authors = "Sky == liver";
+var authors = "Glitch";
 var version = 1;
 
 var currency;
-var a1, a2, a3, b1;
+var a1, a2, a3, b1, b2;
 
 var init = () => {
   currency = theory.createCurrency();
+  currency2 = theory.createCurrency("q", "q");
+  
+  currency2.value = BigNumber.ONE;
   
     // a1
     {
@@ -47,6 +50,14 @@ var init = () => {
         b1.getDescription = (_) => Utils.getMath(getDesc(b1.level));
         b1.getInfo = (amount) => Utils.getMathTo(getDesc(b1.level), getDesc(b1.level + amount));
     }
+  
+    // b2
+    {
+        let getDesc = (level) => "b_2=" + getB1(level).toString(0);
+        b2 = theory.createUpgrade(4, currency, new FirstFreeCost(new ExponentialCost(5e9, Math.log2(1.75))));
+        b2.getDescription = (_) => Utils.getMath(getDesc(b2.level));
+        b2.getInfo = (amount) => Utils.getMathTo(getDesc(b2.level), getDesc(b2.level + amount));
+    }
 
   
     /////////////////////
@@ -54,6 +65,21 @@ var init = () => {
     theory.createPublicationUpgrade(0, currency, 1e10);
     theory.createBuyAllUpgrade(1, currency, 1e13);
     theory.createAutoBuyerUpgrade(2, currency, 1e30);
+  
+    ///////////////////////
+    //// Milestone Upgrades
+    theory.setMilestoneCost(new LinearCost(20, 20));
+
+    /////////////////
+    //// Achievements
+    achievement1 = theory.createAchievement(0, "You Played!", "i show think.", () => true);
+}
+
+var tick = (elapsedTime, multiplier) => {
+    let dt = BigNumber.from(elapsedTime * multiplier);
+    let bonus = theory.publicationMultiplier;
+    currency.value += dt * bonus * getA1(a1.level) * getA2(a2.level) * getA3(a3.level) * getB1(b1.level).sqrt()
+    currency2.value += dt * getB1(b1.level)
 }
 
 var getPrimaryEquation = () => {
@@ -65,7 +91,7 @@ var getPrimaryEquation = () => {
     
     result += "b_1 \times ";
    
-    result += "q";
+    result += "\sqrt{q}";
 
     return result;
 }
@@ -79,5 +105,6 @@ var getA1 = (level) => Utils.getStepwisePowerSum(level, 5, 10, 0);
 var getA2 = (level) => Utils.getStepwisePowerSum(level, 3, 8, 1);
 var getA3 = (level) => Utils.getStepwisePowerSum(level, 25, 7, 1);
 var getB1 = (level) => Utils.getStepwisePowerSum(level, 9, 8, 2);
+var getB2 = (level) => Utils.getStepwisePowerSum(level, 12, 25, 2);
 
 init();
